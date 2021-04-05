@@ -10,6 +10,7 @@
 
 #include <vector>
 
+class Texture;
 //-------------------------------------------------------------------------
 
 class Scene	
@@ -22,8 +23,11 @@ public:
 	Scene& operator=(const Scene& s) = delete;  // no copy assignment
 		
 	void init();
+	void update();
 
     void render(Camera const& cam) const;
+
+	void changeScene(int id);
 	
 protected:
 	void free();
@@ -31,6 +35,9 @@ protected:
 	void resetGL();
 
 	std::vector<Abs_Entity*> gObjects;  // Entities (graphic objects) of the scene
+	std::vector<Texture*> gTextures; 
+
+	int mId = 1;
 };
 //-------------------------------------------------------------------------
 

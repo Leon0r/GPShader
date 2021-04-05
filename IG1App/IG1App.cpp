@@ -49,7 +49,8 @@ void IG1App::init()
 //-------------------------------------------------------------------------
 
 void IG1App::iniWinOpenGL() 
-{  // Initialization
+{  
+	// Initialization
 	cout << "Starting glut...\n";
 	int argc = 0;
 	glutInit(&argc, nullptr);
@@ -71,10 +72,20 @@ void IG1App::iniWinOpenGL()
 	glutReshapeFunc(s_resize);
 	glutKeyboardFunc(s_key);
 	glutSpecialFunc(s_specialKey);
+	glutIdleFunc(s_update);
 	glutDisplayFunc(s_display);
 	
 	cout << glGetString(GL_VERSION) << '\n';
 	cout << glGetString(GL_VENDOR) << '\n';
+}
+void IG1App::update()
+{
+	GLuint newTime = glutGet(GLUT_ELAPSED_TIME);
+	if (mAnimate && (newTime - mLastUpdateTime) >= (1000 / mFPS)) {
+		mLastUpdateTime = newTime;
+		mScene->update();
+		display();
+	}
 }
 //-------------------------------------------------------------------------
 
@@ -128,6 +139,23 @@ void IG1App::key(unsigned char key, int x, int y)
 	case 'o':
 		mCamera->set2D();
 		break;
+	case 'u':
+		mScene->update();
+		break;
+	case 'U':
+		mAnimate = !mAnimate;
+		mLastUpdateTime = glutGet(GLUT_ELAPSED_TIME);
+		break;
+
+	case '0':
+		mScene->changeScene(0);
+		mCamera->set2D();
+		break;
+	case '1':
+		mScene->changeScene(1);
+		mCamera->set3D();
+		break;
+
 	default:
 		need_redisplay = false;
 		break;

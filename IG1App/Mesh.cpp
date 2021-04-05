@@ -18,13 +18,20 @@ void Mesh::render() const
     // transfer the coordinates of the vertices
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_DOUBLE, 0, vVertices.data());  // number of coordinates per vertex, type of each coordinate, stride, pointer 
+    
     if (vColors.size() > 0) { // transfer colors
       glEnableClientState(GL_COLOR_ARRAY);
       glColorPointer(4, GL_DOUBLE, 0, vColors.data());  // components number (rgba=4), type of each component, stride, pointer  
     }
+    
+    if (vTexCoords.size() > 0) {
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        glTexCoordPointer(2, GL_DOUBLE, 0, vTexCoords.data());
+    }
 
 	draw();
 
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
   }
@@ -63,5 +70,266 @@ Mesh * Mesh::createRGBAxes(GLdouble l)
  
   return mesh;
 }
+
 //-------------------------------------------------------------------------
 
+Mesh* Mesh::generaPoligono(GLuint numL, GLdouble rd)
+{
+  Mesh* mesh = new Mesh();
+
+  mesh->mPrimitive = GL_LINE_LOOP;
+
+  mesh->mNumVertices = numL;
+  mesh->vVertices.reserve(mesh->mNumVertices);
+  mesh->vColors.reserve(mesh->mNumVertices);
+  
+  float Cx = 0;
+  float Cy = 0;
+  float x, y;
+  float grd = 90;
+  x = Cx + rd * cos(radians(grd));
+  y = Cy + rd * sin(radians(grd));
+
+  for (int i = 0; i < numL; i++) {
+      mesh->vVertices.emplace_back(x, y, 0.0);
+      grd = grd + (360 / numL);
+      x = Cx + rd * cos(radians(grd));
+      y = Cy + rd * sin(radians(grd));
+  }
+  
+   
+  return mesh;
+}
+
+//-------------------------------------------------------------------------
+
+Mesh* Mesh::generaSierpinski(GLdouble rd, GLuint numP)
+{
+    Mesh* triangulo = generaPoligono(3, rd);
+    Mesh* mesh = new Mesh();
+
+    mesh->mPrimitive = GL_POINTS;
+
+    mesh->mNumVertices = numP;
+    mesh->vVertices.reserve(mesh->mNumVertices);
+    mesh->vColors.reserve(mesh->mNumVertices);
+
+    
+    mesh->vVertices.emplace_back(triangulo->vertices()[rand() % 3]);
+    glm::dvec3 auxVertA, auxVertB;
+    for (int k = 1; k < numP; k++) {
+        auxVertA = mesh->vertices()[k - 1];
+        auxVertB = triangulo->vertices()[rand() % 3] + auxVertA;
+        mesh->vVertices.emplace_back(auxVertB.x/2, auxVertB.y / 2, auxVertB.z / 2);
+    }
+
+    
+    delete triangulo; 
+    triangulo = nullptr;
+    return mesh;
+}
+
+//-------------------------------------------------------------------------
+
+Mesh* Mesh::generaTrianguloRGB(GLdouble rd)
+{
+    Mesh* mesh = generaPoligono(3, rd);
+    
+    mesh->mPrimitive = GL_TRIANGLES;
+
+    mesh->vColors.emplace_back(1.0, 0.0, 0.0, 1.0);
+    mesh->vColors.emplace_back(0.0, 1.0, 0.0, 1.0);
+    mesh->vColors.emplace_back(0.0, 0.0, 1.0, 1.0);
+
+    return mesh;
+}
+
+//-------------------------------------------------------------------------
+
+Mesh* Mesh::generaRectangulo(GLdouble w, GLdouble h)
+{
+    Mesh* mesh = new Mesh();
+
+    mesh->mPrimitive = GL_TRIANGLE_STRIP;
+
+    mesh->mNumVertices = 4;
+    mesh->vVertices.reserve(mesh->mNumVertices);
+    mesh->vColors.reserve(mesh->mNumVertices);
+
+    mesh->vVertices.emplace_back(0, h, 0.0);
+    mesh->vVertices.emplace_back(0, 0, 0.0);
+    mesh->vVertices.emplace_back(w, h, 0.0);
+    mesh->vVertices.emplace_back(w, 0, 0.0);
+
+
+    return mesh;
+}
+
+//-------------------------------------------------------------------------
+
+Mesh* Mesh::generaRectanguloRGB(GLdouble w, GLdouble h)
+{
+    Mesh* mesh = generaRectangulo(w, h);
+
+    mesh->vColors.emplace_back(1.0, 0.0, 0.0, 1.0);
+    mesh->vColors.emplace_back(0.0, 1.0, 0.0, 1.0);
+    mesh->vColors.emplace_back(0.0, 0.0, 1.0, 1.0);
+    mesh->vColors.emplace_back(1.0, 0.0, 0.0, 1.0);
+
+    return mesh;
+}
+
+//-------------------------------------------------------------------------
+
+Mesh* Mesh::generaEstrella3D(GLdouble re, GLuint np, GLdouble h)
+{
+    Mesh* mesh = new Mesh();
+
+    mesh->mPrimitive = GL_TRIANGLE_FAN;
+
+    mesh->mNumVertices = 2*np+2;
+    mesh->vVertices.reserve(mesh->mNumVertices);
+    mesh->vColors.reserve(mesh->mNumVertices);
+
+    float Cx = 0;
+    float Cy = 0;
+    float outx, outy;
+    float inx, iny;
+    GLfloat grd = 0.0;
+
+    outx = Cx + re * cos(radians(grd));
+    outy = Cy + re * sin(radians(grd));
+
+    grd = grd + (360.0 / (np * 2));
+    inx = Cx + (re/2) * cos(radians(grd));
+    iny = Cy + (re/2) * sin(radians(grd));
+
+    mesh->vVertices.emplace_back(0.0, 0.0, 0.0);
+    for (int i = 0; i < np; i++) {
+        mesh->vVertices.emplace_back(outx, outy, h);
+        mesh->vVertices.emplace_back(inx, iny, h);
+
+        grd = grd + (360.0 / (np*2));
+        outx = Cx + re * cos(radians(grd));
+        outy = Cy + re * sin(radians(grd));
+
+
+        grd = grd + (360.0 / (np * 2));
+        inx = Cx + (re / 2) * cos(radians(grd));
+        iny = Cy + (re / 2) * sin(radians(grd));
+    }
+    mesh->vVertices.emplace_back(outx, outy, h);
+
+
+    return mesh;
+}
+
+//-------------------------------------------------------------------------
+
+Mesh* Mesh::generaContCubo(GLdouble ld)
+{
+    Mesh* mesh = new Mesh();
+
+    mesh->mPrimitive = GL_TRIANGLE_STRIP;
+
+    mesh->mNumVertices = 10;
+    mesh->vVertices.reserve(mesh->mNumVertices);
+    mesh->vColors.reserve(mesh->mNumVertices);
+
+    mesh->vVertices.emplace_back(ld / 2, ld / 2, ld / 2);
+    mesh->vVertices.emplace_back(ld / 2, -ld / 2, ld / 2);
+
+    mesh->vVertices.emplace_back(-ld / 2, ld / 2, ld / 2);
+    mesh->vVertices.emplace_back(-ld / 2, -ld / 2, ld / 2);
+
+    mesh->vVertices.emplace_back(-ld / 2, ld / 2, -ld / 2);
+    mesh->vVertices.emplace_back(-ld / 2, -ld / 2, -ld / 2);
+
+    mesh->vVertices.emplace_back(ld / 2, ld / 2, -ld / 2);
+    mesh->vVertices.emplace_back(ld / 2, -ld / 2, -ld / 2);
+
+    mesh->vVertices.emplace_back(ld / 2, ld / 2, ld / 2);
+    mesh->vVertices.emplace_back(ld / 2, -ld / 2, ld / 2);
+
+
+    return mesh;
+}
+
+//-------------------------------------------------------------------------
+
+Mesh* Mesh::generaRectanguloTexCor(GLdouble w, GLdouble h, GLuint rw, GLuint rh)
+{
+    Mesh* mesh = generaRectangulo(w, h);
+    mesh->vTexCoords.reserve(mesh->mNumVertices);
+
+    mesh->vTexCoords.emplace_back(0, rw);
+    mesh->vTexCoords.emplace_back(0, 0);
+    mesh->vTexCoords.emplace_back(rh, rw);
+    mesh->vTexCoords.emplace_back(rh, 0);
+    return mesh;
+}
+
+//-------------------------------------------------------------------------
+
+Mesh* Mesh::generaEstrellaTexCor(GLdouble re, GLuint np, GLdouble h)
+{
+    Mesh* mesh = generaEstrella3D(re, np, h);
+    mesh->vTexCoords.reserve(mesh->mNumVertices);
+
+    mesh->vTexCoords.emplace_back(0.5, 0.5);
+
+    for (int i = 1; i < mesh->mNumVertices; i++) {
+        switch (i % 8) {
+        case 0:
+            mesh->vTexCoords.emplace_back(0, 0);
+            break;
+        case 1:
+            mesh->vTexCoords.emplace_back(0, 0.5);
+            break;
+        case 2:
+            mesh->vTexCoords.emplace_back(0, 1);
+            break;
+        case 3:
+            mesh->vTexCoords.emplace_back(0.5, 1);
+            break;
+        case 4:
+            mesh->vTexCoords.emplace_back(1, 1);
+            break;
+        case 5:
+            mesh->vTexCoords.emplace_back(1, 0.5);
+            break;
+        case 6:
+            mesh->vTexCoords.emplace_back(1, 0);
+            break;
+        case 7:
+            mesh->vTexCoords.emplace_back(0.5, 0);
+            break;
+        }
+    }
+    return mesh;
+}
+
+Mesh* Mesh::generaContCuboTexCor(GLdouble nl)
+{
+    Mesh* mesh = generaContCubo(nl);
+    mesh->vTexCoords.reserve(mesh->mNumVertices);
+
+    mesh->vTexCoords.emplace_back(0, 1);
+    mesh->vTexCoords.emplace_back(0, 0);
+
+    mesh->vTexCoords.emplace_back(1, 1);
+    mesh->vTexCoords.emplace_back(1, 0);
+
+    mesh->vTexCoords.emplace_back(2, 1);
+    mesh->vTexCoords.emplace_back(2, 0);
+
+    mesh->vTexCoords.emplace_back(3, 1);
+    mesh->vTexCoords.emplace_back(3, 0);
+
+    mesh->vTexCoords.emplace_back(4, 1);
+    mesh->vTexCoords.emplace_back(4, 0);
+
+    return mesh;
+}
+
+//-------------------------------------------------------------------------

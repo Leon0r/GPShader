@@ -32,6 +32,9 @@ public:
 	// Graphics objects of the scene
 	Scene const& scene() { return *mScene; };
 
+	int winWidth() { return s_ig1app.mWinW; };
+	int winHeigth() { return s_ig1app.mWinH; };
+
 	void run();    // the main event processing loop
 	void close();  // the application
 	
@@ -42,6 +45,7 @@ protected:
 
 	void init();
 	void iniWinOpenGL();
+	void update();
 	void free();   
  
 	void display() const;   // the scene
@@ -51,6 +55,7 @@ protected:
 
 	// static callbacks 
 	static void s_display() { s_ig1app.display(); };
+	static void s_update() { s_ig1app.update(); };
 	static void s_resize(int newWidth, int newHeight) { s_ig1app.resize(newWidth, newHeight); };
 	static void s_key(unsigned char key, int x, int y) { s_ig1app.key(key, x, y); };
 	static void s_specialKey(int key, int x, int y) { s_ig1app.specialKey(key, x, y); };
@@ -61,7 +66,12 @@ protected:
 	Camera *mCamera = nullptr;
 	// Graphics objects of the scene
 	Scene *mScene = nullptr;
-	
+
+	// last updated
+	GLuint mLastUpdateTime;
+	int mFPS = 25;
+	bool mAnimate = false;
+
 	bool mStop = false; // main event processing loop
 	int mWinId = 0;	    // window's identifier
 	int mWinW = 800;    // window's width 
