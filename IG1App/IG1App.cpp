@@ -74,7 +74,7 @@ void IG1App::iniWinOpenGL()
 	glutSpecialFunc(s_specialKey);
 	glutIdleFunc(s_update);
 	glutDisplayFunc(s_display);
-	
+
 	cout << glGetString(GL_VERSION) << '\n';
 	cout << glGetString(GL_VENDOR) << '\n';
 }
