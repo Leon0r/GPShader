@@ -22,7 +22,12 @@ class Shader
 {
 public:
 	// Constructor, lee y crea el shader
-	Shader(const char* vertexPath, const char* fragmentPath);
+	/*const int versionMajor, const int versionMinor,
+		char* vertexFile, char* fragmentFile, char* geometryFile = "")
+		: versionMajor(versionMajor), versionMinor(versionMinor)*/
+
+	Shader(char* vertexPath, char* fragmentPath, char* geometryPath);
+
 	virtual ~Shader();
 
 	void use(); // activa el shader
@@ -31,11 +36,14 @@ public:
 	void setInt(const std::string& name, int value) const;
 	void setFloat(const std::string& name, float value) const;
 
-	unsigned int _id;
 
 private:
-	void checkCompileErrors(unsigned int shader, std::string type);
+	GLuint _id;
 
+	void checkCompileErrors(unsigned int shader, std::string type);
+	std::string loadShaderSource(char* fileName);
+	GLuint loadShader(GLenum type, char* fileName);
+	void linkProgram(GLuint vertexShader, GLuint fragmentShader, GLuint geometryShader);
 };
 
 

@@ -54,9 +54,9 @@ void IG1App::iniWinOpenGL()
 	cout << "Starting glut...\n";
 	int argc = 0;
 	glutInit(&argc, nullptr);
-		
+
 	glutInitContextVersion(3, 3);
-	glutInitContextProfile(GLUT_CORE_PROFILE);  // GLUT_CORE_PROFILE
+	glutInitContextProfile(GLUT_COMPATIBILITY_PROFILE);  // GLUT_CORE_PROFILE
 	glutInitContextFlags(GLUT_DEBUG);		// GLUT_FORWARD_COMPATIBLE
 
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
@@ -65,9 +65,9 @@ void IG1App::iniWinOpenGL()
 	//glutInitWindowPosition (140, 140);
 
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH /*| GLUT_STENCIL*/); // RGBA colors, double buffer, depth buffer and stencil buffer   
-	
+
 	mWinId = glutCreateWindow("IG1App");  // with its associated OpenGL context, return window's identifier 
-	
+
 	// Callback registration
 	glutReshapeFunc(s_resize);
 	glutKeyboardFunc(s_key);
