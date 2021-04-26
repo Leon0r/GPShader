@@ -2,7 +2,9 @@
 #include "CheckML.h"
 #include <iostream>
 
-Shader::Shader(char* vertexPath, char* fragmentPath, char* geometryPath)
+Shader::Shader(const int versionMajor, const int versionMinor,
+	char* vertexPath, char* fragmentPath, char* geometryPath)
+	: _versionMajor(versionMajor), _versionMinor(versionMinor)
 {
 	GLuint vertexShader = 0;
 	GLuint geometryShader = 0;
@@ -34,19 +36,72 @@ void Shader::use()
 	glUseProgram(this->_id);
 }
 
-void Shader::setBool(const std::string& name, bool value) const
+void Shader::unuse()
 {
-	//glUniform1i(glGetUniformLocation(_id, name.c_str()), (int)value);
+	glUseProgram(0);
 }
 
-void Shader::setInt(const std::string& name, int value) const
+void Shader::set1i(GLint value, const GLchar* name)
 {
-	//glUniform1i(glGetUniformLocation(_id, name.c_str()), value);
+	this->use();
+
+	glUniform1i(glGetUniformLocation(this->_id, name), value);
+
+	this->unuse();
 }
 
-void Shader::setFloat(const std::string& name, float value) const
+void Shader::set1f(GLfloat value, const GLchar* name)
 {
-	//glUniform1f(glGetUniformLocation(_id, name.c_str()), value);
+	this->use();
+
+	glUniform1f(glGetUniformLocation(this->_id, name), value);
+
+	this->unuse();
+}
+
+void Shader::setVec2f(glm::fvec2 value, const GLchar* name)
+{
+	this->use();
+
+	glUniform2fv(glGetUniformLocation(this->_id, name), 1, glm::value_ptr(value));
+
+	this->unuse();
+}
+
+void Shader::setVec3f(glm::fvec3 value, const GLchar* name)
+{
+	this->use();
+
+	glUniform3fv(glGetUniformLocation(this->_id, name), 1, glm::value_ptr(value));
+
+	this->unuse();
+}
+
+void Shader::setVec4f(glm::fvec4 value, const GLchar* name)
+{
+	this->use();
+
+	glUniform4fv(glGetUniformLocation(this->_id, name), 1, glm::value_ptr(value));
+
+	this->unuse();
+}
+
+void Shader::setMat3fv(glm::mat3 value, const GLchar* name, GLboolean transpose)
+{
+	this->use();
+
+	glUniformMatrix3fv(glGetUniformLocation(this->_id, name), 1, transpose, glm::value_ptr(value));
+
+	this->unuse();
+}
+
+void Shader::setMat4fv(glm::mat4 value, const GLchar* name, GLboolean transpose)
+{
+	this->use();
+
+	glUniformMatrix4fv(glGetUniformLocation(this->_id, name), 1, transpose, glm::value_ptr(value));
+
+	this->unuse();
 }
 
 void Shader::checkCompileErrors(unsigned int shader, std::string type)
@@ -75,16 +130,14 @@ std::string Shader::loadShaderSource(char* fileName)
 
 	in_file.close();
 
-	/*
 	std::string versionNr =
-		std::to_string(this->versionMajor) +
-		std::to_string(this->versionMinor) +
+		std::to_string(this->_versionMajor) +
+		std::to_string(this->_versionMinor) +
 		"0";
 
 	src.replace(src.find("#version"), 12, ("#version " + versionNr));
-		*/
-	return src;
 
+	return src;
 }
 
 GLuint Shader::loadShader(GLenum type, char* fileName)
