@@ -11,6 +11,7 @@
 #include <vector>
 
 class Texture;
+class Shader;
 //-------------------------------------------------------------------------
 
 class Scene	
@@ -36,7 +37,9 @@ protected:
 
 	std::vector<Abs_Entity*> gObjects;  // Entities (graphic objects) of the scene
 	std::vector<Texture*> gTextures; 
-
+	
+	Shader* gShader;
+	
 	int mId = 1;
 };
 //-------------------------------------------------------------------------

@@ -3,6 +3,7 @@
 #include <gtc/matrix_transform.hpp>  
 #include <gtc/type_ptr.hpp>
 
+#include "Shader.h"
 #include "Texture.h"
 #include "ColorsNames.h"
 
@@ -14,8 +15,8 @@ void Scene::init()
 	setGL();  // OpenGL settings
 
 	// allocate memory and load resources
-    // Lights
-    // Textures
+    // Lights -------------------------------
+    // Textures -------------------------------
 	Texture* texture = new Texture();
 	texture->load("..\\Bmps\\baldosaC.bmp"); // 0
 	gTextures.push_back(texture);
@@ -60,9 +61,15 @@ void Scene::init()
 	texture->load("..\\Bmps\\Zelda.bmp"); // 10
 	gTextures.push_back(texture);
 
+	// Shaders -------------------------------
+	// gShader = new Shader("..\\Shaders\\shaderTest.vs", "..\\Shaders\\shaderTest.fs");
+	// gShader->setFloat("someUniform", 1.0f);
+
     // Graphics objects (entities) of the scene
 	Abs_Entity* aux;
 	if (mId == 0) {
+		// gShader->use();
+
 		aux = new Poligono(3, 200.0);
 		aux->setColor(glm::dvec4(RGB_COLOR_AQUA, 1.0));
 		gObjects.push_back(aux);
