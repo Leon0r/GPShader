@@ -2,11 +2,9 @@
 #ifndef _H_Scene_H_
 #define _H_Scene_H_
 
-#include <GL/freeglut.h>
-#include <glm.hpp>
-
 #include "Camera.h"
 #include "Entity.h"
+#include "ShaderUtil.h"
 
 #include <vector>
 
@@ -38,7 +36,7 @@ protected:
 	std::vector<Abs_Entity*> gObjects;  // Entities (graphic objects) of the scene
 	std::vector<Texture*> gTextures; 
 	
-	Shader* gShader;
+	ShaderUtil* gShader;
 	
 	int mId = 1;
 };

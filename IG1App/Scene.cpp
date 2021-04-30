@@ -3,7 +3,6 @@
 #include <gtc/matrix_transform.hpp>  
 #include <gtc/type_ptr.hpp>
 
-#include "Shader.h"
 #include "Texture.h"
 #include "ColorsNames.h"
 
@@ -62,7 +61,9 @@ void Scene::init()
 	gTextures.push_back(texture);
 
 	// Shaders -------------------------------
-	// gShader = new Shader("..\\Shaders\\shaderTest.vs", "..\\Shaders\\shaderTest.fs");
+	gShader = new ShaderUtil();
+	gShader->Load("..\\Shaders\\3.3.shader.vs", "..\\Shaders\\3.3.shader.fs");
+	gShader->Use();
 	// gShader->setFloat("someUniform", 1.0f);
 
     // Graphics objects (entities) of the scene
