@@ -2,9 +2,11 @@
 #ifndef _H_Scene_H_
 #define _H_Scene_H_
 
+#include "GLinclude.h"
 #include "Camera.h"
 #include "Entity.h"
-#include "ShaderUtil.h"
+
+#include "Shader.h"
 
 #include <vector>
 
@@ -36,9 +38,10 @@ protected:
 	std::vector<Abs_Entity*> gObjects;  // Entities (graphic objects) of the scene
 	std::vector<Texture*> gTextures; 
 	
-	ShaderUtil* gShader;
-	
 	int mId = 1;
+
+	Shader* myShader;
+	unsigned int VBO, VAO;
 };
 //-------------------------------------------------------------------------
 

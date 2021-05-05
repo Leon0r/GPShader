@@ -35,7 +35,11 @@ void IG1App::run()   // enters the main event processing loop
 void IG1App::init()
 {
 	// create an OpenGL Context
-	iniWinOpenGL();   
+	iniWinOpenGL();  
+
+	if (!gladLoadGL()) {
+		printf("GLAD: Something went wrong!\n");
+	}
 
 	// create the scene after creating the context 
 	// allocate memory and resources
@@ -67,7 +71,6 @@ void IG1App::iniWinOpenGL()
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH /*| GLUT_STENCIL*/); // RGBA colors, double buffer, depth buffer and stencil buffer   
 
 	mWinId = glutCreateWindow("IG1App");  // with its associated OpenGL context, return window's identifier 
-
 	// Callback registration
 	glutReshapeFunc(s_resize);
 	glutKeyboardFunc(s_key);
@@ -75,9 +78,10 @@ void IG1App::iniWinOpenGL()
 	glutIdleFunc(s_update);
 	glutDisplayFunc(s_display);
 
-	cout << glGetString(GL_VERSION) << '\n';
-	cout << glGetString(GL_VENDOR) << '\n';
+	/*cout << glGetString(GL_VERSION) << '\n';
+	cout << glGetString(GL_VENDOR) << '\n';*/
 }
+
 void IG1App::update()
 {
 	GLuint newTime = glutGet(GLUT_ELAPSED_TIME);

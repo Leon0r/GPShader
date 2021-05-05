@@ -2,6 +2,8 @@
 #ifndef _H_IG1App_H_
 #define _H_IG1App_H_
 
+
+
 //#include <Windows.h>
 //#include <gl/GL.h>    // OpenGL
 //#include <gl/GLU.h>   // OpenGL Utility Library
@@ -10,10 +12,11 @@
 //#include <GL/freeglut.h>  // OpenGL Utility Toolkit
 //#include <glm.hpp>        // OpenGL Mathematics
 
-#include <GL/glut.h>
+//#include <glad/glad.h>
+//#include <GL/glut.h>
 
-#include "Viewport.h"
-#include "Camera.h"
+#include "GLinclude.h"
+
 #include "Scene.h"
 
 

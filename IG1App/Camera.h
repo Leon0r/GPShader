@@ -2,6 +2,8 @@
 #ifndef _H_Camera_H_
 #define _H_Camera_H_
 
+#include "GLinclude.h"
+
 #include "Viewport.h"
 
 //-------------------------------------------------------------------------

@@ -2,6 +2,8 @@
 #ifndef _H_Entities_H_
 #define _H_Entities_H_
 
+#include "GLinclude.h"
+
 #include "Mesh.h"
 
 class Texture;
@@ -24,13 +26,14 @@ public:
 	void setModelMat(glm::dmat4 const& aMat) { mModelMat = aMat; };
 	void setColor(glm::dvec4 aColor) { mColor = aColor; };
 	void setTexture(Texture* tex) { mTexture = tex; };
-	
+	void setShader(Shader* shader) { mMesh->setShader(shader); };
 protected:
 
 	Mesh* mMesh = nullptr;   // the mesh
 	glm::dmat4 mModelMat;    // modeling matrix
 	glm::dvec4 mColor;			 // color
 	Texture* mTexture = nullptr; // textura
+	Shader* mShader = nullptr; // shader
 
 	// transfers modelViewMat to the GPU
 	virtual void upload(glm::dmat4 const& mModelViewMat) const; 

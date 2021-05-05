@@ -2,8 +2,8 @@
 #ifndef _H_Mesh_H_
 #define _H_Mesh_H_
 
-#include <GL/freeglut.h>
-#include <glm.hpp>
+#include "GLinclude.h"
+#include "Shader.h"
 
 #include <vector>
 
@@ -42,6 +42,8 @@ public:
 	std::vector<glm::dvec3> const& vertices() const { return vVertices; };
 	std::vector<glm::dvec4> const& colors() const { return vColors; };
 	std::vector<glm::dvec2> const& textureVertices() const { return vTexCoords; };
+
+	void setShader(Shader* shader);
 		
 protected:
 	
@@ -51,6 +53,8 @@ protected:
 	std::vector<glm::dvec4> vColors;    // color array
 	std::vector<glm::dvec2> vTexCoords; // texture coords array
 	virtual void draw() const;
+
+	Shader* mShader;
 };
 //-------------------------------------------------------------------------
 

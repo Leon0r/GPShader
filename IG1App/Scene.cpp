@@ -60,14 +60,14 @@ void Scene::init()
 	texture->load("..\\Bmps\\Zelda.bmp"); // 10
 	gTextures.push_back(texture);
 
-	// Shaders -------------------------------
-	gShader = new ShaderUtil();
-	gShader->Load("..\\Shaders\\3.3.shader.vs", "..\\Shaders\\3.3.shader.fs");
-	gShader->Use();
-	// gShader->setFloat("someUniform", 1.0f);
+	// set up vertex data (and buffer(s)) and configure vertex attribute
 
-    // Graphics objects (entities) of the scene
 	Abs_Entity* aux;
+	aux = new TrianguloRGB(100.0);
+	aux->setShader(new Shader("..\\Shaders\\3.3.shader.vs", "..\\Shaders\\3.3.shader.fs"));
+	gObjects.push_back(aux);
+    // Graphics objects (entities) of the scene
+	/*Abs_Entity* aux;
 	if (mId == 0) {
 		// gShader->use();
 
@@ -90,7 +90,7 @@ void Scene::init()
 		/* // Triangulo RGB cambiado de posicion
 		aux->setModelMat(glm::translate(aux->modelMat(), glm::dvec3(50, -150, 0)));
 		GLdouble dgrr = -25;
-		aux->setModelMat(glm::rotate(aux->modelMat(), glm::radians(dgrr), glm::dvec3(1.0, 0, 0)));*/
+		aux->setModelMat(glm::rotate(aux->modelMat(), glm::radians(dgrr), glm::dvec3(1.0, 0, 0)));
 
 		aux = new RectanguloRGB(1000.0, 1000.0);
 		gObjects.push_back(aux);
@@ -101,7 +101,7 @@ void Scene::init()
 
 		 /*aux = new Estrella3D(100.0, 6, 100.0);
 		 aux->setColor(glm::dvec4(RGB_COLOR_PALETURQUOISE, 1.0));
-		 gObjects.push_back(aux);*/
+		 gObjects.push_back(aux);
 
 		 aux = new Suelo(150.0, 150.0, 2,3);
 		 aux->setTexture(gTextures[0]);
@@ -115,7 +115,7 @@ void Scene::init()
 		/* Caja* aux2 = new Caja(100.0);
 		 aux2->setInsideTexture(gTextures[6]);
 		 aux2->setTexture(gTextures[3]);
-		 gObjects.push_back(aux2);*/
+		 gObjects.push_back(aux2);
 		 
 		 aux = new Foto(50.0, 50.0);
 		 GLdouble dgrr = 90;
@@ -132,7 +132,7 @@ void Scene::init()
 		 aux2->setModelMat(glm::translate(aux2->modelMat(), glm::dvec3(75, 75, 75)));
 
 		 gObjects.push_back(aux2);
-	}
+	}*/
 	
 }
 
@@ -142,13 +142,14 @@ void Scene::update()
 {
 	for (int i = 0; i < gObjects.size(); i++)
 		gObjects[i]->update();
-	
 }
 
 //-------------------------------------------------------------------------
 
 void Scene::free() 
 { 
+	/*glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);*/
 	// release memory and resources   
 	for (Texture* tx : gTextures) 
 	{
@@ -187,9 +188,8 @@ void Scene::render(Camera const& cam) const
 
 	for (Abs_Entity* el : gObjects)
 	{
-	  el->render(cam.viewMat());
+		el->render(cam.viewMat());
 	}
-
 }
 void Scene::changeScene(int id)
 {

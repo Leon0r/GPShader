@@ -29,12 +29,21 @@ void Mesh::render() const
         glTexCoordPointer(2, GL_DOUBLE, 0, vTexCoords.data());
     }
 
+    if (mShader != nullptr) {
+        //printf("HOLA");
+        //mShader->use();
+    }
+
 	draw();
 
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
   }
+}
+void Mesh::setShader(Shader* shader)
+{
+    mShader = shader;
 }
 //-------------------------------------------------------------------------
 

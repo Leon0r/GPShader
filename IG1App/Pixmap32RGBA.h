@@ -5,9 +5,8 @@
 //#include <Windows.h>
 //#include <gl/GL.h>
 
-#include <GL/freeglut.h>
+#include "GLinclude.h"
 #include <string>
-#include <glm.hpp>
 
 
 class PixMap32RGBA {   
