@@ -54,7 +54,8 @@ protected:
 	std::vector<glm::dvec2> vTexCoords; // texture coords array
 	virtual void draw() const;
 
-	Shader* mShader;
+	Shader* mShader = nullptr;
+	unsigned int VBO, VAO;
 };
 //-------------------------------------------------------------------------
 

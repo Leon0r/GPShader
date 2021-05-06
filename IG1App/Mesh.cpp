@@ -12,38 +12,60 @@ void Mesh::draw() const
 }
 //-------------------------------------------------------------------------
 
-void Mesh::render() const 
+void Mesh::render() const
 {
-  if (vVertices.size() > 0) {  // transfer data
-    // transfer the coordinates of the vertices
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glVertexPointer(3, GL_DOUBLE, 0, vVertices.data());  // number of coordinates per vertex, type of each coordinate, stride, pointer 
-    
-    if (vColors.size() > 0) { // transfer colors
-      glEnableClientState(GL_COLOR_ARRAY);
-      glColorPointer(4, GL_DOUBLE, 0, vColors.data());  // components number (rgba=4), type of each component, stride, pointer  
-    }
-    
-    if (vTexCoords.size() > 0) {
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        glTexCoordPointer(2, GL_DOUBLE, 0, vTexCoords.data());
-    }
+    if (mShader == nullptr) {
+        if (vVertices.size() > 0) {  // transfer data
+            // transfer the coordinates of the vertices
+            glEnableClientState(GL_VERTEX_ARRAY);
+            glVertexPointer(3, GL_DOUBLE, 0, vVertices.data());  // number of coordinates per vertex, type of each coordinate, stride, pointer 
 
-    if (mShader != nullptr) {
-        //printf("HOLA");
-        //mShader->use();
+            if (vColors.size() > 0) { // transfer colors
+                glEnableClientState(GL_COLOR_ARRAY);
+                glColorPointer(4, GL_DOUBLE, 0, vColors.data());  // components number (rgba=4), type of each component, stride, pointer  
+            }
+
+            if (vTexCoords.size() > 0) {
+                glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+                glTexCoordPointer(2, GL_DOUBLE, 0, vTexCoords.data());
+            }
+
+            draw();
+
+            glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+            glDisableClientState(GL_COLOR_ARRAY);
+            glDisableClientState(GL_VERTEX_ARRAY);
+        }
     }
-
-	draw();
-
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    glDisableClientState(GL_COLOR_ARRAY);
-	glDisableClientState(GL_VERTEX_ARRAY);
-  }
+    else {
+        mShader->use();
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+    }
 }
 void Mesh::setShader(Shader* shader)
 {
     mShader = shader;
+
+    float vertices[] = {
+        // positions         // colors
+         0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // bottom right
+        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  // bottom left
+         0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f   // top 
+    };
+
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    // color attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 }
 //-------------------------------------------------------------------------
 
