@@ -93,7 +93,8 @@ void Scene::init()
 
 
 	Abs_Entity* aux;
-	aux = new Poligono(3, 100.0);
+	aux = new RectanguloRGB(0.5, 0.5);
+	//aux = new Poligono(3, 100.0);
 	aux->setShader(new Shader("..\\Shaders\\3.3.shader.vs", "..\\Shaders\\3.3.shader.fs"));
 	gObjects.push_back(aux);
     // Graphics objects (entities) of the scene

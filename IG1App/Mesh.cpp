@@ -40,32 +40,48 @@ void Mesh::render() const
     else {
         mShader->use();
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        draw();
     }
 }
 void Mesh::setShader(Shader* shader)
 {
     mShader = shader;
 
-    float vertices[] = {
-        // positions         // colors
-         0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  // bottom left
-         0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f   // top 
-    };
 
+    std::vector<double> vertices;
+    for (int i = 0; i < mNumVertices; i++) {
+        for (int j = 0; j < 3; j++)
+            vertices.push_back(vVertices[i][j]);
+        for (int j = 0; j < 4; j++)
+            vertices.push_back(vColors[i][j]);
+ 
+    }
+
+    
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(double), &vertices[0], GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_DOUBLE, GL_FALSE, 7 * sizeof(double), (void*)0);
     glEnableVertexAttribArray(0);
     // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 4, GL_DOUBLE, GL_FALSE, 7 * sizeof(double), (void*)(3 * sizeof(double)));
     glEnableVertexAttribArray(1);
+
+    /*glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, (vVertices.size() + vColors.size()) * sizeof(double), NULL, GL_STATIC_DRAW);
+
+    glBufferSubData(GL_VERTEX_ARRAY, 0, sizeof(float) * vVertices.size(), vVertices.data());
+    glBufferSubData(GL_VERTEX_ARRAY, sizeof(float) * vVertices.size(), sizeof(float) * vColors.size(), vColors.data());
+
+    glVertexAttribPointer(0, 3, GL_DOUBLE, GL_FALSE, 0, vVertices.data());
+    glEnableVertexAttribArray(0);
+    // color attribute
+    glVertexAttribPointer(1, 4, GL_DOUBLE, GL_FALSE, 0, vColors.data());
+    glEnableVertexAttribArray(1);*/
 }
 //-------------------------------------------------------------------------
 
