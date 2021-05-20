@@ -38,9 +38,11 @@ void Mesh::render() const
         }
     }
     else {
-        mShader->use();
+        mShader->bind();
         glBindVertexArray(VAO);
         draw();
+        glBindVertexArray(0);
+        mShader->unbind();
     }
 }
 void Mesh::setShader(Shader* shader)
@@ -52,11 +54,10 @@ void Mesh::setShader(Shader* shader)
     for (int i = 0; i < mNumVertices; i++) {
         for (int j = 0; j < 3; j++)
             vertices.push_back(vVertices[i][j]);
+
         for (int j = 0; j < 4; j++)
             vertices.push_back(vColors[i][j]);
- 
     }
-
     
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -82,6 +83,12 @@ void Mesh::setShader(Shader* shader)
     // color attribute
     glVertexAttribPointer(1, 4, GL_DOUBLE, GL_FALSE, 0, vColors.data());
     glEnableVertexAttribArray(1);*/
+}
+void Mesh::setColor(glm::dvec4 aColor)
+{
+    for (int i = 0; i < mNumVertices; i++) {
+        vColors[i] = aColor;
+    }
 }
 //-------------------------------------------------------------------------
 
@@ -143,8 +150,11 @@ Mesh* Mesh::generaPoligono(GLuint numL, GLdouble rd)
       x = Cx + rd * cos(radians(grd));
       y = Cy + rd * sin(radians(grd));
   }
-  
-   
+
+  for (int i = 0; i < numL; i++) {
+      mesh->vColors.emplace_back(1.0, 1.0, 1.0, 1.0);
+  }
+
   return mesh;
 }
 
@@ -184,9 +194,9 @@ Mesh* Mesh::generaTrianguloRGB(GLdouble rd)
     
     mesh->mPrimitive = GL_TRIANGLES;
 
-    mesh->vColors.emplace_back(1.0, 0.0, 0.0, 1.0);
-    mesh->vColors.emplace_back(0.0, 1.0, 0.0, 1.0);
-    mesh->vColors.emplace_back(0.0, 0.0, 1.0, 1.0);
+    mesh->vColors[0] = glm::dvec4(1.0, 0.0, 0.0, 1.0);
+    mesh->vColors[1] = glm::dvec4(0.0, 1.0, 0.0, 1.0);
+    mesh->vColors[2] = glm::dvec4(0.0, 0.0, 1.0, 1.0);
 
     return mesh;
 }

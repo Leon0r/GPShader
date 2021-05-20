@@ -44,6 +44,7 @@ public:
 	std::vector<glm::dvec2> const& textureVertices() const { return vTexCoords; };
 
 	void setShader(Shader* shader);
+	void setColor(glm::dvec4 aColor);
 		
 protected:
 	

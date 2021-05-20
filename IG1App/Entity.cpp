@@ -8,6 +8,18 @@
 
 using namespace glm;
 
+void Abs_Entity::setColor(glm::dvec4 aColor)
+{
+	mColor = aColor;
+	mMesh->setColor(aColor);
+}
+
+void Abs_Entity::setShader(Shader* shader)
+{
+	mShader = shader;
+	mMesh->setShader(shader);   
+}
+
 //-------------------------------------------------------------------------
 void Abs_Entity::upload(dmat4 const& modelViewMat) const
 { 
@@ -62,14 +74,9 @@ void Poligono::render(dmat4 const& modelViewMat) const
 	if (mMesh != nullptr) {
 		dmat4 aMat = modelViewMat * mModelMat;  // glm matrix multiplication
 		upload(aMat);
-				
-		glLineWidth(2);
-		if (mShader != nullptr) {
-			mShader->use();
-		}
-		else {
-			glColor3d(mColor.r, mColor.g, mColor.b);
-		}
+
+		glLineWidth(5);
+		glColor3d(mColor.r, mColor.g, mColor.b);
 		
 		mMesh->render();
 

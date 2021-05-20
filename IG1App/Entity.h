@@ -24,9 +24,10 @@ public:
 	// modeling matrix
 	glm::dmat4 const& modelMat() const { return mModelMat; };
 	void setModelMat(glm::dmat4 const& aMat) { mModelMat = aMat; };
-	void setColor(glm::dvec4 aColor) { mColor = aColor; };
+	void setColor(glm::dvec4 aColor);
 	void setTexture(Texture* tex) { mTexture = tex; };
-	void setShader(Shader* shader) { mMesh->setShader(shader); };
+	void setShader(Shader* shader);
+
 protected:
 
 	Mesh* mMesh = nullptr;   // the mesh

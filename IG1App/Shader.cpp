@@ -1,4 +1,7 @@
 #include "Shader.h"
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
@@ -55,11 +58,6 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
     glDeleteShader(fragment);
 }
 
-void Shader::use()
-{
-    glUseProgram(ID);
-}
-
 void Shader::setBool(const std::string& name, bool value) const
 {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
@@ -75,12 +73,14 @@ void Shader::setFloat(const std::string& name, float value) const
     glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
 
+
 void Shader::checkCompileErrors(unsigned int shader, std::string type)
 {
     int success;
     char infoLog[1024];
     if (type != "PROGRAM")
     {
+        // Checks for program compilation errors
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
         if (!success)
         {
@@ -90,6 +90,7 @@ void Shader::checkCompileErrors(unsigned int shader, std::string type)
     }
     else
     {
+        // Checks for shaders linking errors
         glGetProgramiv(shader, GL_LINK_STATUS, &success);
         if (!success)
         {
