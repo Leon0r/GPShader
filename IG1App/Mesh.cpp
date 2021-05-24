@@ -72,17 +72,6 @@ void Mesh::setShader(Shader* shader)
     glVertexAttribPointer(1, 4, GL_DOUBLE, GL_FALSE, 7 * sizeof(double), (void*)(3 * sizeof(double)));
     glEnableVertexAttribArray(1);
 
-    /*glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, (vVertices.size() + vColors.size()) * sizeof(double), NULL, GL_STATIC_DRAW);
-
-    glBufferSubData(GL_VERTEX_ARRAY, 0, sizeof(float) * vVertices.size(), vVertices.data());
-    glBufferSubData(GL_VERTEX_ARRAY, sizeof(float) * vVertices.size(), sizeof(float) * vColors.size(), vColors.data());
-
-    glVertexAttribPointer(0, 3, GL_DOUBLE, GL_FALSE, 0, vVertices.data());
-    glEnableVertexAttribArray(0);
-    // color attribute
-    glVertexAttribPointer(1, 4, GL_DOUBLE, GL_FALSE, 0, vColors.data());
-    glEnableVertexAttribArray(1);*/
 }
 void Mesh::setColor(glm::dvec4 aColor)
 {

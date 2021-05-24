@@ -68,6 +68,11 @@ void Scene::init()
 	aux->setColor(glm::dvec4(RGB_COLOR_TURQUOISE, 1.0));
 	aux->setShader(new Shader("..\\Shaders\\3.3.simpleshader.vs", "..\\Shaders\\3.3.simpleshader.fs"));
 	gObjects.push_back(aux);
+
+	aux = new Poligono(7, 0.25);
+	aux->setColor(glm::dvec4(RGB_COLOR_CRIMSON, 1.0));
+	aux->setShader(new Shader("..\\Shaders\\3.3.simpleshader.vs", "..\\Shaders\\3.3.simpleshader.fs"));
+	gObjects.push_back(aux);
     // Graphics objects (entities) of the scene
 	/*Abs_Entity* aux;
 	if (mId == 0) {
